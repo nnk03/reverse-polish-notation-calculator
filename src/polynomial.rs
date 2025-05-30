@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
 
 use crate::globals::{Derivative, DisplayRPN, Exponent, Number, EPSILON};
@@ -11,6 +9,7 @@ pub struct Polynomial {
 
 // is it necessary to check for empty polynomial
 impl Polynomial {
+    #[allow(dead_code)]
     pub fn new(coeff: Vec<Number>) -> Polynomial {
         Polynomial { coeff }
     }

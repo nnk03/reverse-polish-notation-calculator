@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::{
     error::Error,
     ops::{Add, Div, Mul, Sub},
@@ -30,6 +28,7 @@ impl Expression {
         }
     }
 
+    #[allow(dead_code)]
     pub fn degree(&self) -> usize {
         // this function most probably will never be used
         self.numerator.degree() - self.denominator.degree()
