@@ -50,6 +50,18 @@ impl Polynomial {
                 *val = 0.0
             }
         }
+
+        while let Some(u) = self.coeff.last() {
+            if u.abs() < EPSILON {
+                self.coeff.pop();
+            } else {
+                break;
+            }
+        }
+
+        if self.coeff.len() == 0 {
+            self.coeff = vec![0.0]
+        }
     }
 }
 
@@ -60,10 +72,6 @@ impl DisplayRPN for Polynomial {
         let n = self.len();
 
         for i in 0..n {
-            if self[i] == 0.0 {
-                continue;
-            }
-
             if i == 0 {
                 result = format!("{}", self[0]);
             } else if i == 1 {
@@ -105,14 +113,17 @@ impl Exponent for Polynomial {
     type Output = Polynomial;
 
     fn square(&self) -> Self::Output {
-        Polynomial {
-            coeff: self.coeff.iter().map(|&val| val * val).collect(),
-        }
+        self.clone() * self.clone()
     }
 
     fn pow(&self, n: i64) -> Self::Output {
         if n == 0 {
             return Polynomial::one(1);
+        }
+        if n == 1 {
+            return Polynomial {
+                coeff: self.coeff.clone(),
+            };
         }
         if n < 0 {
             panic!("Negative Exponent for Polynomial Structure\n Use it with Expression Structure")
@@ -204,7 +215,7 @@ impl Mul for Polynomial {
 
         for i in 0..a {
             for j in 0..b {
-                output[i + j] += self[i] + rhs[j];
+                output[i + j] += self[i] * rhs[j];
             }
         }
 

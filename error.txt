@@ -1,39 +1,15 @@
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
      Running `target/debug/reverse_polish_notation`
-[src/reverse_polish_calculator.rs:107:22] output = Expression {
+[src/reverse_polish_calculator.rs:111:22] output = Expression {
     numerator: Polynomial {
         coeff: [
-            3.0,
-            -9.999999999621423e-6,
-            6.0,
-            1.0,
             0.0,
-            0.0,
+            2.0,
         ],
     },
     denominator: Polynomial {
         coeff: [
-            25.0,
             1.0,
-            0.0,
-        ],
-    },
-}
-[src/reverse_polish_calculator.rs:107:22] output = Expression {
-    numerator: Polynomial {
-        coeff: [
-            6.0,
-            4.0,
-            3.0,
-            0.0,
-        ],
-    },
-    denominator: Polynomial {
-        coeff: [
-            6.0,
-            3.0,
-            1.0,
-            0.0,
         ],
     },
 }

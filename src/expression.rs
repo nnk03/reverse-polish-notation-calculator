@@ -119,6 +119,12 @@ impl Exponent for Expression {
         if n == 0 {
             return Expression::one(1);
         }
+        if n == 1 {
+            return Expression {
+                numerator: self.numerator.clone(),
+                denominator: self.denominator.clone(),
+            };
+        }
         if n < 0 {
             return Expression::one(1) / self.pow(-n);
         }
@@ -196,5 +202,25 @@ impl Sub for Expression {
                 },
                 denominator: rhs.denominator,
             };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn is_equal(a: &Vec<Number>, b: &Vec<Number>) -> bool {
+        a.len() == b.len() && a.iter().zip(b).all(|(a, b)| (a - b).abs() < EPSILON)
+    }
+
+    #[test]
+    fn check_squaring() {
+        let mono = Polynomial {
+            coeff: vec![0.0, 1.0],
+        };
+
+        println!("{:#?}", mono.square());
+
+        assert!(is_equal(&mono.square().coeff, &vec![0.0, 0.0, 1.0, 0.0]))
     }
 }

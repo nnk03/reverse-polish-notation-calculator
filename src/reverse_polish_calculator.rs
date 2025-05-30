@@ -94,6 +94,10 @@ pub fn calculate(line: String) -> Result<String, MathError> {
         }
 
         result.clean();
+
+        // debugging
+        // let result = dbg!(result);
+
         if result.is_denominator_zero() {
             return Err(MathError::NAN);
         }
@@ -103,8 +107,7 @@ pub fn calculate(line: String) -> Result<String, MathError> {
     if stack.len() == 1 {
         let mut output = stack.pop().unwrap();
         output.clean();
-
-        let output = dbg!(output);
+        // let output = dbg!(output);
 
         Ok(output.rpn_string())
     } else {
