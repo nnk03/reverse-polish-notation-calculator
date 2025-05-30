@@ -1,4 +1,4 @@
-# Reverse Polish Notation for Polynomials over one variable
+# Reverse Polish Notation Calculator for Polynomials over one variable
 
 E -> E E + | E E - | E E \* | E E / | E d | E n ^
 
