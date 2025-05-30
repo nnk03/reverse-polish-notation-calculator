@@ -35,6 +35,11 @@ impl Expression {
         self.numerator.degree() - self.denominator.degree()
     }
 
+    pub fn clean(&mut self) {
+        self.numerator.clean();
+        self.denominator.clean();
+    }
+
     pub fn from(input: &str) -> Result<Expression, Box<dyn Error>> {
         if input == "x" {
             let mut output = Expression::zero(2);

@@ -43,6 +43,14 @@ impl Polynomial {
         // if the absolute value of a number is less than EPSILON, consider it to be zero
         self.coeff.iter().all(|val| val.abs() < EPSILON)
     }
+
+    pub fn clean(&mut self) {
+        for val in self.coeff.iter_mut() {
+            if val.abs() <= EPSILON {
+                *val = 0.0
+            }
+        }
+    }
 }
 
 impl DisplayRPN for Polynomial {
@@ -52,6 +60,10 @@ impl DisplayRPN for Polynomial {
         let n = self.len();
 
         for i in 0..n {
+            if self[i] == 0.0 {
+                continue;
+            }
+
             if i == 0 {
                 result = format!("{}", self[0]);
             } else if i == 1 {
@@ -184,7 +196,7 @@ impl Mul for Polynomial {
 
     fn mul(self, rhs: Self) -> Self::Output {
         let a = self.len();
-        let b = self.len();
+        let b = rhs.len();
 
         let m = a + b;
 

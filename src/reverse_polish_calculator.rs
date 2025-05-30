@@ -1,7 +1,5 @@
 #![allow(dead_code)]
 
-use std::io::BufRead;
-
 use crate::expression::Expression;
 use crate::globals::*;
 
@@ -11,7 +9,7 @@ pub fn calculate(line: String) -> Result<String, MathError> {
     let mut stack: Stack<Expression> = Stack::new();
 
     for word in line.split_whitespace() {
-        let result;
+        let mut result;
 
         match word {
             "+" => {
@@ -95,6 +93,7 @@ pub fn calculate(line: String) -> Result<String, MathError> {
             }
         }
 
+        result.clean();
         if result.is_denominator_zero() {
             return Err(MathError::NAN);
         }
@@ -102,24 +101,13 @@ pub fn calculate(line: String) -> Result<String, MathError> {
     }
 
     if stack.len() == 1 {
-        Ok(stack[0].rpn_string())
+        let mut output = stack.pop().unwrap();
+        output.clean();
+
+        let output = dbg!(output);
+
+        Ok(output.rpn_string())
     } else {
         return Err(MathError::ParseError);
-    }
-}
-
-pub fn run() {
-    let stdin = std::io::stdin();
-    let reader = stdin.lock();
-
-    // read the standard input and then output
-    for line in reader.lines() {
-        let line = line.unwrap();
-
-        let result = calculate(line);
-        match result {
-            Ok(output) => println!("{}", output),
-            Err(err) => println!("{}", err.to_string()),
-        }
     }
 }
