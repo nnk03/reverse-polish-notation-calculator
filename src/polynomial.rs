@@ -2,30 +2,11 @@
 
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
 
-pub type Number = f64;
-
-pub const EPSILON: Number = 1e-6;
+use crate::globals::{Derivative, DisplayRPN, Exponent, Number, EPSILON};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Polynomial {
-    coeff: Vec<Number>,
-}
-
-pub trait Derivative {
-    type Output;
-    fn d(&self) -> Self::Output;
-}
-
-pub trait Exponent {
-    type Output;
-
-    fn pow(&self, n: i32) -> Self::Output;
-
-    fn square(&self) -> Self::Output;
-}
-
-pub trait DisplayRPN {
-    fn rpn_string(&self) -> String;
+    pub coeff: Vec<Number>,
 }
 
 // is it necessary to check for empty polynomial
@@ -117,7 +98,7 @@ impl Exponent for Polynomial {
         }
     }
 
-    fn pow(&self, n: i32) -> Self::Output {
+    fn pow(&self, n: i64) -> Self::Output {
         if n == 0 {
             return Polynomial::one(1);
         }
@@ -128,7 +109,7 @@ impl Exponent for Polynomial {
         // using binary exponentiation
 
         let mut output = self
-            .pow((n as Number / 2 as Number).floor() as i32)
+            .pow((n as Number / 2 as Number).floor() as i64)
             .square();
 
         if n % 2 == 1 {

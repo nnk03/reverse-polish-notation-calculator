@@ -2,10 +2,12 @@
 
 use std::{
     error::Error,
-    ops::{Add, Div, Mul},
+    ops::{Add, Div, Mul, Sub},
 };
 
-use crate::polynomial::{Derivative, DisplayRPN, Exponent, Number, Polynomial};
+use crate::polynomial::Polynomial;
+
+use crate::globals::{Derivative, DisplayRPN, Exponent, Number, EPSILON};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Expression {
@@ -34,23 +36,48 @@ impl Expression {
     }
 
     pub fn from(input: &str) -> Result<Expression, Box<dyn Error>> {
-        let mut output = Expression::zero(2);
-
         if input == "x" {
+            let mut output = Expression::zero(2);
             output.numerator[1] = 1.0;
 
             return Ok(output);
         }
 
+        let mut output = Expression::zero(1);
+
         // currently ignoring that number of digits allowed after decimal point is 5
         let number: Number = input.parse()?;
-        output.numerator[1] = number;
+        output.numerator[0] = number;
 
         Ok(output)
     }
 
     pub fn is_denominator_zero(&self) -> bool {
         self.denominator.is_zero_polynomial()
+    }
+
+    pub fn exponentiation_number(&self) -> Option<Number> {
+        if self.denominator.len() < 1 || self.numerator.len() < 1 {
+            return None;
+        }
+
+        for i in 1..self.denominator.len() {
+            if self.denominator[i].abs() > EPSILON {
+                return None;
+            }
+        }
+
+        for i in 1..self.numerator.len() {
+            if self.numerator[i].abs() > EPSILON {
+                return None;
+            }
+        }
+
+        if self.denominator[0].abs() < EPSILON {
+            return None;
+        }
+
+        Some(self.numerator[0] / self.denominator[0])
     }
 }
 
@@ -83,7 +110,7 @@ impl Exponent for Expression {
         }
     }
 
-    fn pow(&self, n: i32) -> Self::Output {
+    fn pow(&self, n: i64) -> Self::Output {
         if n == 0 {
             return Expression::one(1);
         }
@@ -92,7 +119,7 @@ impl Exponent for Expression {
         }
 
         let mut output = self
-            .pow((n as Number / 2 as Number).floor() as i32)
+            .pow((n as Number / 2 as Number).floor() as i64)
             .square();
 
         if n % 2 == 1 {
@@ -150,5 +177,19 @@ impl Add for Expression {
             numerator: left_numerator + right_numerator,
             denominator,
         }
+    }
+}
+
+impl Sub for Expression {
+    type Output = Expression;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        return self
+            + Expression {
+                numerator: Polynomial {
+                    coeff: rhs.numerator.coeff.iter().map(|&val| -val).collect(),
+                },
+                denominator: rhs.denominator,
+            };
     }
 }
