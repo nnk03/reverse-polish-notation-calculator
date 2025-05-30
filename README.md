@@ -1,8 +1,10 @@
 # Reverse Polish Notation for Polynomials over one variable
 
 E -> E E + | E E - | E E \* | E E / | E d | E n ^
+
 E -> x | n | n.PPPPP
-P -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+P -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9\
 
 In this version it is not enforced that the floating number must have 5 digits after the decimal point
 
