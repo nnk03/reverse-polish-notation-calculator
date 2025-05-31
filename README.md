@@ -32,3 +32,5 @@ NAN
 ```
 
 Reduces the polynomial if the denominator is a non zero constant polynomial
+Returns `Parse Error` if error in parsing
+Returns `NAN` if any attempt at division by zero
