@@ -30,14 +30,6 @@ impl Polynomial {
         self.coeff.len()
     }
 
-    pub fn degree(&self) -> usize {
-        if self.len() == 0 {
-            return 0;
-        }
-
-        self.coeff.len() - 1
-    }
-
     pub fn is_zero_polynomial(&self) -> bool {
         // if the absolute value of a number is less than EPSILON, consider it to be zero
         self.coeff.iter().all(|val| val.abs() < EPSILON)
@@ -62,21 +54,62 @@ impl Polynomial {
             self.coeff = vec![0.0]
         }
     }
+
+    pub fn is_constant_polynomial(&self) -> bool {
+        if self.len() == 0 {
+            return false;
+        }
+
+        if self.len() == 1 {
+            return true;
+        }
+
+        for i in 1..self.len() {
+            if self[i].abs() > EPSILON {
+                return false;
+            }
+        }
+
+        true
+    }
 }
 
 impl DisplayRPN for Polynomial {
     fn rpn_string(&self) -> String {
-        let mut result = String::new();
+        let mut q = Vec::new();
 
         let n = self.len();
 
         for i in 0..n {
+            // if i == 0 {
+            //     result = format!("{}", self[0]);
+            // } else if i == 1 {
+            //     result = format!("{} {} x * +", result, self[1]);
+            // } else {
+            //     result = format!("{} {} x {} ^ * +", result, self[i], i)
+            // }
+            if self[i].abs() > EPSILON {
+                // q.push(format!("{}"));
+                if i == 0 {
+                    q.push(format!("{}", self[0]));
+                } else if i == 1 {
+                    q.push(format!("{} x *", self[1]));
+                } else {
+                    q.push(format!("{} x {} ^ *", self[i], i));
+                }
+            }
+        }
+
+        if q.len() == 0 {
+            return "0".to_string();
+        }
+
+        let mut result = String::new();
+        for i in 0..q.len() {
             if i == 0 {
-                result = format!("{}", self[0]);
-            } else if i == 1 {
-                result = format!("{} {} x * +", result, self[1]);
+                result = format!("{}", q[0]);
             } else {
-                result = format!("{} {} x {} ^ * +", result, self[i], i)
+                result = format!("{} {} +", result, q[i]);
             }
         }
 

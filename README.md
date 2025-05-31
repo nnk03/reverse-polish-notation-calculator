@@ -19,12 +19,16 @@ For the input:
 1 x x 2 ^ + 1 x +
 x 2 ^ 1.00001 + d
 3 2 3 - 1 + /
+2 x 2 ^ * 2 /
 ```
 
 The program correctly outputs
 
 ```
 Parse Error
-0 2 x * + 1 /
+2 x *
 NAN
+1 x 2 ^ *
 ```
+
+Reduces the polynomial if the denominator is a non zero constant polynomial

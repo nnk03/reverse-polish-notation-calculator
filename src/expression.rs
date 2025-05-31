@@ -28,15 +28,29 @@ impl Expression {
         }
     }
 
-    #[allow(dead_code)]
-    pub fn degree(&self) -> usize {
-        // this function most probably will never be used
-        self.numerator.degree() - self.denominator.degree()
-    }
-
     pub fn clean(&mut self) {
         self.numerator.clean();
         self.denominator.clean();
+
+        if self.denominator.is_constant_polynomial() {
+            // if denominator is a constant polynomial
+            // reduce the expression
+            let value = self.denominator[0];
+
+            // if denominator is zero, just return
+            if value.abs() < EPSILON {
+                return;
+            }
+            self.numerator = Polynomial {
+                coeff: self
+                    .numerator
+                    .coeff
+                    .iter()
+                    .map(|&val| val / value)
+                    .collect(),
+            };
+            self.denominator = Polynomial::one(1);
+        }
     }
 
     pub fn from(input: &str) -> Result<Expression, Box<dyn Error>> {
@@ -142,6 +156,12 @@ impl Exponent for Expression {
 
 impl DisplayRPN for Expression {
     fn rpn_string(&self) -> String {
+        if self.denominator.is_constant_polynomial() && (self.denominator[0] - 1.0).abs() < EPSILON
+        {
+            // if denominator is 1, just return the numerator
+            return self.numerator.rpn_string();
+        }
+
         format!(
             "{} {} /",
             self.numerator.rpn_string(),
