@@ -5,3 +5,7 @@ edition = "2021"
 
 [dependencies]
 thiserror = "2.0.12"
+
+[[bin]]
+name = "rpn"
+path = "src/main.rs"
